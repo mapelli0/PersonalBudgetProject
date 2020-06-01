@@ -63,9 +63,9 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 			var container = builder.Build();
 
 			_dispatcher = container.Resolve<IMediator>();
-			var configuration = new MapperConfiguration(cfg => cfg.AddMaps(new[] {
-																						"BaseCleanArchitectureProject"
-																				}));
+			//var configuration = new MapperConfiguration(cfg => cfg.AddMaps(new[] {
+			//																			"BaseCleanArchitectureProject"
+			//																	}));
 			var mapper = container.Resolve<IMapper>();
 			var validator = container.Resolve<IValidator<TEntity>>();
 			_dbContext = new BaseCleanArchitectureProjectDbContext(options, _dispatcher);

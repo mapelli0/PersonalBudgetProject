@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200601121326_Customer.cs" />
-    <Compile Remove="Migrations\20200601121326_Customer.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Ardalis.EFCore.Extensions" Version="1.1.0" />
     <PackageReference Include="Autofac" Version="5.2.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
@@ -30,6 +25,10 @@
   <ItemGroup>
     <ProjectReference Include="..\BaseCleanArchitectureProject.Core\BaseCleanArchitectureProject.Core.csproj" />
     <ProjectReference Include="..\Salftech.SharedKernel\Salftech.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Repository\" />
   </ItemGroup>
 
 </Project>

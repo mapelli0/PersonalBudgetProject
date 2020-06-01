@@ -21,4 +21,9 @@
     <ProjectReference Include="..\BaseCleanArchitectureProject.Infrastructure\BaseCleanArchitectureProject.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Endpoints\" />
+    <Folder Include="Models\Mapper\" />
+  </ItemGroup>
+
 </Project>

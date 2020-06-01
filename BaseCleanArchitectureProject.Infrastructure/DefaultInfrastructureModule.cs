@@ -4,7 +4,6 @@ using System.Reflection;
 using Autofac;
 using AutoMapper;
 using BaseCleanArchitectureProject.Core.Events;
-using BaseCleanArchitectureProject.Core.Interfaces;
 using BaseCleanArchitectureProject.Infrastructure.Data;
 using BaseCleanArchitectureProject.Infrastructure.EmailSender;
 using FluentValidation;
@@ -67,7 +66,6 @@ namespace BaseCleanArchitectureProject.Infrastructure {
 
 		private static void RegisterRepositories (ContainerBuilder builder) {
 			builder.RegisterGeneric(typeof(Repository<,>)).As(typeof(IRepository<,>)).InstancePerLifetimeScope();
-			builder.RegisterType<CustomerRepository>().As<ICustomerRepository>().InstancePerLifetimeScope();
 		}
 
 		private void RegisterAutomapper (ContainerBuilder builder) {

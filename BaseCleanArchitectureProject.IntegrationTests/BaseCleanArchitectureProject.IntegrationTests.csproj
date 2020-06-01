@@ -26,7 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BaseCleanArchitectureProject.Infrastructure\BaseCleanArchitectureProject.Infrastructure.csproj" />
     <ProjectReference Include="..\BaseCleanArchitectureProject.UnitTests\BaseCleanArchitectureProject.UnitTests.csproj" />
-    <ProjectReference Include="..\BaseCleanArchitectureProject\BaseCleanArchitectureProject.csproj" />
+    <ProjectReference Include="..\PersonalBudgetProject\PersonalBudgetProject.csproj" />
   </ItemGroup>
 
 </Project>
