@@ -6,7 +6,7 @@ using Salftech.SharedKernel;
 namespace BaseCleanArchitectureProject.Core.Entities.Institution {
 
 	public class Bank : BaseGuidEntity {
-		private ICollection<Account> _accounts { get; set; }
+		private readonly ICollection<Account> _accounts;
 
 		public Bank() {
 			_accounts = new HashSet<Account>();

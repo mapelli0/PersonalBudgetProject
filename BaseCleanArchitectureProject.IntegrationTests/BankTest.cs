@@ -1,10 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using BaseCleanArchitectureProject.Core.Entities.Institution;
 using BaseCleanArchitectureProject.Infrastructure.Data;
 using BaseCleanArchitectureProject.UnitTests.Factory;
 using FluentAssertions;
-using FluentValidation;
 using Xunit;
 
 namespace BaseCleanArchitectureProject.IntegrationTests {
@@ -17,7 +17,7 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 			Func<Task> add = async () => {
 								await repo.AddAsync(bank);
 							};
-			add.Should().Throw<ValidationException>();
+			add.Should().Throw<FluentValidation.ValidationException>();
 		}
 
 		//[Fact]
