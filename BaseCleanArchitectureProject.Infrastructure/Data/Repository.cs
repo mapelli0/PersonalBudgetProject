@@ -12,7 +12,7 @@ using Salftech.SharedKernel.Interfaces;
 
 namespace BaseCleanArchitectureProject.Infrastructure.Data {
 
-	public class Repository<T, TKey>: IRepository<T, TKey> where T: BaseEntityId<TKey> {
+	public class Repository<T, TKey>: IRepository<T, TKey> where T: BaseEntityId<TKey>, IRoot {
 		protected readonly BaseCleanArchitectureProjectDbContext _dbContext;
 		protected readonly IMapper _autoMapper;
 		private readonly IValidator<T> _validator;

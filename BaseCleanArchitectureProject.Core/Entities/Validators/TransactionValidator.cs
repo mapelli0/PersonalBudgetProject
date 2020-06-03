@@ -5,9 +5,10 @@ namespace BaseCleanArchitectureProject.Core.Entities.Validators {
 
 	public class TransactionValidator : AbstractValidator<Transaction> {
 		public TransactionValidator() {
-			RuleFor(t => t.Date).NotNull().NotEmpty();
-			RuleFor(t => t.Name).NotNull().NotEmpty();
-			RuleFor(t => t.Value).NotNull().NotEmpty();
+			RuleFor(t => t.Date).NotEmpty();
+			RuleFor(t => t.Name).NotEmpty();
+			RuleFor(t => t.Value).NotEmpty();
+			RuleFor(t => t.Account).SetValidator(new AccountValidator());
 		}
 	}
 

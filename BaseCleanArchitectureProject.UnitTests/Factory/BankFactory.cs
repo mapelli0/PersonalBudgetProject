@@ -7,9 +7,9 @@ namespace BaseCleanArchitectureProject.UnitTests.Factory {
 	public class BankFactory : BaseFactory<Bank> {
 		
 
-		public BankFactory WithName (string name) {
+		public BankFactory WithName (string name = "") {
 			Entity.Name = name;
-			return new BankFactory();
+			return this;
 		}
 
 	}

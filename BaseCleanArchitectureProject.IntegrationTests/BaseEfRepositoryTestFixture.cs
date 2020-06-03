@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Autofac;
 using AutoMapper;
@@ -12,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Salftech.SharedKernel;
+using Salftech.SharedKernel.Interfaces;
 
 namespace BaseCleanArchitectureProject.IntegrationTests {
 
@@ -54,27 +57,22 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 			return mockValidator;
 		}
 
-		protected async Task<TRepository> GetRepository<TRepository, TEntity>() {
+		protected async Task<IRepository<TEntity, Guid>> GetRepository<TEntity>() where TEntity: IBaseEntityId<Guid>, IRoot {
 			var options = CreateNewContextOptions();
 			var builder = new ContainerBuilder();
 			builder.RegisterModule(new DefaultInfrastructureModule(isDevelopment: true));
 			builder.RegisterType<NullLoggerFactory>().As<ILoggerFactory>().SingleInstance();
 			builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
+			builder.Register(c => CreateNewContextOptions()).As<DbContextOptions<BaseCleanArchitectureProjectDbContext>>().InstancePerLifetimeScope();
+			builder.RegisterType<BaseCleanArchitectureProjectDbContext>().AsSelf().InstancePerLifetimeScope();
+
 			var container = builder.Build();
 
 			_dispatcher = container.Resolve<IMediator>();
-			//var configuration = new MapperConfiguration(cfg => cfg.AddMaps(new[] {
-			//																			"BaseCleanArchitectureProject"
-			//																	}));
-			var mapper = container.Resolve<IMapper>();
-			var validator = container.Resolve<IValidator<TEntity>>();
 			_dbContext = new BaseCleanArchitectureProjectDbContext(options, _dispatcher);
-
 			await _dbContext.SeedData(default);
-			object[] args = {
-									_dbContext, mapper, validator
-							};
-			return(TRepository)Activator.CreateInstance(typeof(TRepository), args);
+			var repository = container.Resolve<IRepository<TEntity, Guid>>();
+			return repository;
 		}
 
 	}

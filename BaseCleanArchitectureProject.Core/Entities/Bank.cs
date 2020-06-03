@@ -5,7 +5,7 @@ using Salftech.SharedKernel;
 
 namespace BaseCleanArchitectureProject.Core.Entities.Institution {
 
-	public class Bank : BaseGuidEntity {
+	public class Bank : BaseGuidEntity, IRoot {
 		private readonly ICollection<Account> _accounts;
 
 		public Bank() {

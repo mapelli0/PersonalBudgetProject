@@ -9,7 +9,7 @@ using Salftech.SharedKernel;
 
 namespace BaseCleanArchitectureProject.Core.Entities {
 
-	public class Account: BaseGuidEntity {
+	public class Account: BaseGuidEntity, IRoot {
 		private readonly ICollection<Transaction> _transactions;
 
 		public Account() {
@@ -48,6 +48,14 @@ namespace BaseCleanArchitectureProject.Core.Entities {
 			transaction.Account = this;
 			this._transactions.Add(transaction);
 		}
+
+
+		public double GetCurrentBalance() {
+			var totalCredit = this.Transactions.Where(t => t.TransactionType == TransactionType.Credit).Sum(s => s.Value);
+			var totalDebit = this.Transactions.Where(t => t.TransactionType == TransactionType.Debit).Sum(s => s.Value);
+			return this.InitialBalance + (totalCredit - totalDebit);
+		} 
+
 
 	}
 
