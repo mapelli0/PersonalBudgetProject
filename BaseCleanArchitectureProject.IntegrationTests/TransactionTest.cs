@@ -14,7 +14,7 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 
 		[Fact]
 		public async Task TransactionShouldBeAddedUsingAccount() {
-			var acc = new AccountFactory().WithDefaultValues().Build();
+			var acc = new AccountFactory(_dbContext).WithDefaultValues().Build();
 			var transaction = new TransactionFactory().WithDefaultValues().Build();
 			acc.AddCredit(transaction);
 

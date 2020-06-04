@@ -1,4 +1,4 @@
-﻿using BaseCleanArchitectureProject.Core.Entities.Institution;
+﻿using System.Data;
 using FluentValidation;
 
 namespace BaseCleanArchitectureProject.Core.Entities.Validators {

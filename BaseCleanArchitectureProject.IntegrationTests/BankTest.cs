@@ -1,10 +1,9 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using BaseCleanArchitectureProject.Core.Entities.Institution;
-using BaseCleanArchitectureProject.Infrastructure.Data;
+using BaseCleanArchitectureProject.Core.Entities;
 using BaseCleanArchitectureProject.UnitTests.Factory;
 using FluentAssertions;
+using FluentValidation;
 using Xunit;
 
 namespace BaseCleanArchitectureProject.IntegrationTests {
@@ -15,9 +14,9 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 			var repo = await GetRepository<Bank>();
 			var bank = new BankFactory().WithName().Build();
 			Func<Task> add = async () => {
-								await repo.AddAsync(bank,default);
+								await repo.AddAsync(bank, default);
 							};
-			add.Should().Throw<FluentValidation.ValidationException>();
+			add.Should().Throw<ValidationException>();
 		}
 
 		[Fact]
@@ -25,19 +24,12 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 			var repo = await GetRepository<Bank>();
 			var bank = new BankFactory().WithName("Test Bank").Build();
 			var addedBank = await repo.AddAsync(bank, default);
-
 			var acc = new AccountFactory().WithDefaultValues().Build();
-
 			addedBank.AddAccount(acc);
 			await repo.UpdateAsync(bank, default);
-
-
 			var rBank = await repo.GetByIdAsync(addedBank.Id, default);
-
 			rBank.Accounts.Should().NotBeEmpty();
-
 		}
-
 	}
 
 }

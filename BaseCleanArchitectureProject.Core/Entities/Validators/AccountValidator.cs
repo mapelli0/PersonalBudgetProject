@@ -7,6 +7,7 @@ namespace BaseCleanArchitectureProject.Core.Entities.Validators {
 			RuleFor(a => a.Name).NotEmpty().WithMessage("Please inform the Account Name");
 			RuleFor(a => a.Number).NotEmpty().WithMessage("Please inform the Account Number");
 			RuleFor(a => a.Bank).NotEmpty().WithMessage("Please inform the Bank that this account Belong to");
+			RuleFor(b => b.Currency).NotNull().WithMessage("Please inform the currency of this Account");
 			RuleFor(a => a.Bank).SetValidator(new BankValidator());
 		}
 		

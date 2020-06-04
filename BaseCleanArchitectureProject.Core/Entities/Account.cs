@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using BaseCleanArchitectureProject.Core.Entities.Enums;
-using BaseCleanArchitectureProject.Core.Entities.Institution;
 using Salftech.SharedKernel;
 
 namespace BaseCleanArchitectureProject.Core.Entities {
@@ -48,6 +47,11 @@ namespace BaseCleanArchitectureProject.Core.Entities {
 			transaction.Account = this;
 			this._transactions.Add(transaction);
 		}
+
+		public Guid CurrencyId { get; set; }
+
+		[Required]
+		public Currency Currency { get; set; }
 
 
 		public double GetCurrentBalance() {

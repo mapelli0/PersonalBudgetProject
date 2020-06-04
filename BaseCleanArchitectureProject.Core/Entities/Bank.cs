@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Salftech.SharedKernel;
 
-namespace BaseCleanArchitectureProject.Core.Entities.Institution {
+namespace BaseCleanArchitectureProject.Core.Entities {
 
-	public class Bank : BaseGuidEntity, IRoot {
+	public class Bank: BaseGuidEntity, IRoot {
 		private readonly ICollection<Account> _accounts;
 
 		public Bank() {
@@ -19,9 +20,8 @@ namespace BaseCleanArchitectureProject.Core.Entities.Institution {
 
 		public void AddAccount (Account account) {
 			account.Bank = this;
-			this._accounts.Add(account);
+			_accounts.Add(account);
 		}
-
 	}
 
 }

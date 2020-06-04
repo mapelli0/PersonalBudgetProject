@@ -22,6 +22,24 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 		protected BaseCleanArchitectureProjectDbContext _dbContext;
 		protected Mock<IMediator> _dispatcherMock;
 		protected IMediator _dispatcher;
+		protected IContainer _container;
+
+
+		public BaseEfRepositoryTestFixture() {
+			var builder = new ContainerBuilder();
+			builder.RegisterModule(new DefaultInfrastructureModule(isDevelopment: true));
+			builder.RegisterType<NullLoggerFactory>().As<ILoggerFactory>().SingleInstance();
+			builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
+			builder.Register(c => CreateNewContextOptions()).As<DbContextOptions<BaseCleanArchitectureProjectDbContext>>().InstancePerLifetimeScope();
+			builder.RegisterType<BaseCleanArchitectureProjectDbContext>().AsSelf().InstancePerLifetimeScope();
+			_container = builder.Build();
+			_dbContext = _container.Resolve<BaseCleanArchitectureProjectDbContext>();
+			
+			_dbContext.SeedData(default).GetAwaiter().GetResult();
+		}
+
+
+
 
 		protected static DbContextOptions<BaseCleanArchitectureProjectDbContext> CreateNewContextOptions() {
 			// Create a fresh service provider, and therefore a fresh
@@ -50,6 +68,7 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 							};
 			return (TRepository)Activator.CreateInstance(typeof(TRepository), args);
 		}
+
 		private static Mock MockValidator<TEntity>() {
 			var mockValidator = new Mock<IValidator<TEntity>>();
 			var validationResult = new ValidationResult();
@@ -58,20 +77,8 @@ namespace BaseCleanArchitectureProject.IntegrationTests {
 		}
 
 		protected async Task<IRepository<TEntity, Guid>> GetRepository<TEntity>() where TEntity: IBaseEntityId<Guid>, IRoot {
-			var options = CreateNewContextOptions();
-			var builder = new ContainerBuilder();
-			builder.RegisterModule(new DefaultInfrastructureModule(isDevelopment: true));
-			builder.RegisterType<NullLoggerFactory>().As<ILoggerFactory>().SingleInstance();
-			builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>)).SingleInstance();
-			builder.Register(c => CreateNewContextOptions()).As<DbContextOptions<BaseCleanArchitectureProjectDbContext>>().InstancePerLifetimeScope();
-			builder.RegisterType<BaseCleanArchitectureProjectDbContext>().AsSelf().InstancePerLifetimeScope();
-
-			var container = builder.Build();
-
-			_dispatcher = container.Resolve<IMediator>();
-			_dbContext = new BaseCleanArchitectureProjectDbContext(options, _dispatcher);
-			await _dbContext.SeedData(default);
-			var repository = container.Resolve<IRepository<TEntity, Guid>>();
+			
+			var repository = _container.Resolve<IRepository<TEntity, Guid>>();
 			return repository;
 		}
 
