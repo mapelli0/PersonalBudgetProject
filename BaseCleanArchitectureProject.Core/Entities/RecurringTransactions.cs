@@ -30,6 +30,11 @@ namespace BaseCleanArchitectureProject.Core.Entities {
 
 		public IEnumerable<Transaction> RecordedTransactions => this._recordedTransactions.ToList().AsReadOnly();
 
+		public Guid CurrencyId { get; set; }
+
+		[Required]
+		public Currency Currency { get; set; }
+
 		[Required]
 		public double Value { get; set; }
 
