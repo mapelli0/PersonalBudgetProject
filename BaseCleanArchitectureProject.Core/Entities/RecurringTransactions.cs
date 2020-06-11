@@ -40,6 +40,10 @@ namespace BaseCleanArchitectureProject.Core.Entities {
 		[Required]
 		public double Value { get; set; }
 
+		public Guid? CategoryId { get; set; }
+
+		public Category Category { get; set; }
+
 		public IEnumerable<Transaction> GetFutureTransaction(DateTime? until = null) {
 			var result = new List<Transaction>();
 			if (!until.HasValue) {
