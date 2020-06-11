@@ -83,6 +83,11 @@ namespace BaseCleanArchitectureProject.UnitTests.Factory {
 			return WithValue().WithRecurringTransactionType(TransactionType.Debit).WithIsAchived().WithName("Gas bill").WithStartDate(DateTime.Today).WithPeriodicity();
 		}
 
+		public RecurringTransactionFactory WithPassedTransactionOn (in DateTime today) {
+			var transaction = new TransactionFactory().WithDefaultValues().WithDate(today).Build();
+			this.Entity.AddTransaction(transaction);
+			return this;
+		}
 	}
 
 }

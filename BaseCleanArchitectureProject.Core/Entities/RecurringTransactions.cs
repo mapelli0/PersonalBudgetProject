@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.AccessControl;
 using BaseCleanArchitectureProject.Core.Entities.Enums;
+using FluentDateTime;
 using Salftech.SharedKernel;
 
 namespace BaseCleanArchitectureProject.Core.Entities {
 
 	public class RecurringTransaction : BaseGuidEntity, IRoot {
-		private ICollection<Transaction> _recordedTransactions;
+		private readonly ICollection<Transaction> _recordedTransactions;
 
 		public RecurringTransaction() {
 			_recordedTransactions = new HashSet<Transaction>();
@@ -41,41 +43,75 @@ namespace BaseCleanArchitectureProject.Core.Entities {
 		public IEnumerable<Transaction> GetFutureTransaction(DateTime? until = null) {
 			var result = new List<Transaction>();
 			if (!until.HasValue) {
-				until = DateTime.Today.AddYears(1);
+				until = DateTime.Today.AddDays(-1).NextYear();
 			}
-			var start = NextOccurence(DateTime.Today);
+			var start = DateTime.Today;
 
-			while (AddFuture(start, until.Value, result)) {
+			while ((start < until.Value)) {
+				if (AddCurrent(start)) {
+					result.Add(new Transaction() {
+														Name = $"{this.Name} {start:dd/MM/yyyy}",
+														Date = start,
+														Description = $"Future transaction {this.Name}",
+														Value = this.Value
+												});
+				}
+				if (Quantity != 0 && result.Count() - Quantity >= 0) {
+					break;
+				}
 				start = NextOccurence(start);
-				result.Add(new Transaction() {
-													Name = $"{this.Name} {start:dd/MM/yyyy}",
-													Date = start,
-													Description = $"Future transaction {this.Name}",
-													Value = this.Value
-											});
 			}
 			return result;
 
 		}
 
-		private bool AddFuture (in DateTime start, DateTime until, List<Transaction> futureTransactions) {
-			if (start <= until) {
-				if (Quantity == 0) {
-					return true;
-				} else {
-					return Quantity - (RecordedTransactions.Count() + futureTransactions.Count()) > 0;
-				}
+		private bool AddCurrent (in DateTime start) {
+			var limitDates = GetLimitDates(start);
+			return !this.RecordedTransactions.Any(rt => limitDates.Item1 <= rt.Date && rt.Date <= limitDates.Item2);
+		}
 
-			} else {
-				return false;
+		private Tuple<DateTime, DateTime> GetLimitDates (in DateTime passedTransactionDate) {
+			DateTime initialDate;
+			DateTime finalDate;
+			switch (Periodicity) {
+				case Periodicity.Weekly:
+					initialDate = passedTransactionDate.BeginningOfWeek();
+					finalDate = passedTransactionDate.EndOfWeek();
+					break;
+				case Periodicity.Monthly:
+					initialDate = passedTransactionDate.BeginningOfMonth();
+					finalDate = passedTransactionDate.EndOfMonth();
+					break;
+				case Periodicity.Bimonthly:
+					initialDate = passedTransactionDate.BeginningOfMonth();
+					finalDate = initialDate.AddMonths(1).EndOfMonth();
+					break;
+				case Periodicity.Quarterly:
+					initialDate = passedTransactionDate.BeginningOfMonth();
+					finalDate = initialDate.AddMonths(2).EndOfMonth();
+					break;
+				case Periodicity.Annually:
+					initialDate = passedTransactionDate.BeginningOfYear();
+					finalDate = passedTransactionDate.EndOfYear();
+					break;
+				default:
+					initialDate = passedTransactionDate;
+					finalDate = passedTransactionDate.AddDays(1);
+					break;
 			}
+			return new Tuple<DateTime, DateTime>(initialDate,finalDate);
+		}
+
+
+		public void AddTransaction (Transaction transaction) {
+			this._recordedTransactions.Add(transaction);
 		}
 
 		private DateTime NextOccurence (in DateTime start) {
 			DateTime result;
 			switch (Periodicity) {
 				case Periodicity.Weekly:
-					result = start.AddDays(7);
+					result = start.WeekAfter();
 					break;
 				case Periodicity.Monthly:
 					result = start.AddMonths(1);
@@ -95,14 +131,6 @@ namespace BaseCleanArchitectureProject.Core.Entities {
 			}
 			return result;
 		}
-	}
-
-	public enum Periodicity {
-		Weekly,
-		Monthly,
-		Bimonthly,
-		Quarterly,
-		Annually
 	}
 
 }
