@@ -36,6 +36,11 @@ namespace BaseCleanArchitectureProject.Infrastructure.Data {
 
 		#region Add
 
+		public async Task<TDto> AddDTOAsync<TDto> (TDto dto, CancellationToken cancellationToken = default(CancellationToken)) {
+			var entity = _autoMapper.Map<TDto, T>(dto);
+			var addEntity = await AddAsync(entity, cancellationToken);
+			return _autoMapper.Map<T, TDto>(addEntity);
+		}
 
 		public virtual async Task<T> AddAsync (T entity, CancellationToken cancellationToken = default) {
 			await ValidateAsync(entity, cancellationToken);
@@ -59,6 +64,11 @@ namespace BaseCleanArchitectureProject.Infrastructure.Data {
 		#endregion
 
 		#region Delete
+
+		public virtual async Task DeleteAsync (TKey id, CancellationToken cancellationToken) {
+			var entity = await GetByIdAsync(id, cancellationToken);
+			await DeleteAsync(entity, cancellationToken);
+		}
 
 		public virtual async Task BulkDeleteAsync (IEnumerable<T> entities, CancellationToken cancellationToken) {
 			_dbContext.Set<T>().RemoveRange(entities);
@@ -111,6 +121,11 @@ namespace BaseCleanArchitectureProject.Infrastructure.Data {
 			await this.ValidateAsync(entity,cancellationToken);
 			_dbContext.Set<T>().Update(entity);
 			await _dbContext.SaveChangesAsync(cancellationToken);
+		}
+
+		public Task UpdateDTOAsync<TDto> (TDto dto, CancellationToken cancellationToken = default(CancellationToken)) {
+			var entity = _autoMapper.Map<TDto, T>(dto);
+			return UpdateAsync(entity, cancellationToken);
 		}
 
 		public virtual async Task BulkUpdateAsync (IEnumerable<T> entities, CancellationToken cancellationToken) {

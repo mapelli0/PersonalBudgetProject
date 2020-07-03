@@ -27,7 +27,7 @@ namespace BaseCleanArchitectureProject.Core.Entities {
 		public double Value { get; set; }
 
 
-		public Guid RecurringTransactionId { get; set; }
+		public Guid? RecurringTransactionId { get; set; }
 
 		public RecurringTransaction RecurringTransaction { get; set; }
 

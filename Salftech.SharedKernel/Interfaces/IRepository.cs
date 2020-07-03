@@ -15,15 +15,21 @@ namespace Salftech.SharedKernel.Interfaces {
 
 		Task<QueryResult<TDto>> ListDTOAsync<TDto> (IQueryOptions<T> options = null, CancellationToken cancellationToken = default(CancellationToken));
 
+		Task<TDto> AddDTOAsync<TDto> (TDto dto, CancellationToken cancellationToken = default(CancellationToken));
+
 		Task<T> AddAsync (T entity, CancellationToken cancellationToken);
 
 		Task<IEnumerable<T>> BulkAddAsync (IEnumerable<T> entities, CancellationToken cancellationToken);
 
 		Task UpdateAsync (T entity, CancellationToken cancellationToken);
 
+		Task UpdateDTOAsync<TDto> (TDto dto, CancellationToken cancellationToken = default(CancellationToken));
+
 		Task BulkUpdateAsync (IEnumerable<T> entities, CancellationToken cancellationToken);
 
 		Task DeleteAsync (T entity, CancellationToken cancellationToken);
+
+		Task DeleteAsync (TKey id, CancellationToken cancellationToken);
 
 		Task BulkDeleteAsync (IEnumerable<T> entities, CancellationToken cancellationToken);
 	}
