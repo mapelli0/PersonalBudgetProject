@@ -12,7 +12,7 @@ namespace PersonalBudgetProject.Endpoints
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BankController : BaseController<Bank, Guid, BankDTO>
+    public class BankController : BaseRepositoryController<Bank, Guid, BankDTO>
     {
 		public BankController(IRepository<Bank, Guid> bankRepository): base(bankRepository) { }
 	}

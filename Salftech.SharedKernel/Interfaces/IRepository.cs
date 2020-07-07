@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Salftech.SharedKernel.Interfaces {
 
-	public interface IRepository<T, TKey> where T: IBaseEntityId<TKey>, IRoot {
+	public interface IRepository<T, in TKey> where T: IBaseEntityId<TKey>, IRoot {
 
 		Task<T> GetByIdAsync (TKey id, CancellationToken cancellationToken);
 
